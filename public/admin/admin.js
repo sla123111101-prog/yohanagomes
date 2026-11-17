@@ -85,7 +85,7 @@ async function initialize() {
     if (status.setupRequired) {
       showPanel("setup-panel");
       if (!status.setupConfigured) {
-        showNotice("O codigo de verificacao ainda nao foi configurado no servidor. Peça ao desenvolvedor para configura-lo nas variaveis da Vercel.");
+        showNotice("O código de verificação ainda não foi configurado no servidor. Peça ao desenvolvedor para configurá-lo nas variáveis da Vercel.");
         document.querySelector('#setup-form button[type="submit"]').disabled = true;
       }
       return;
@@ -94,7 +94,7 @@ async function initialize() {
     else showPanel("login-panel");
   } catch {
     showPanel("login-panel");
-    showNotice("Nao foi possivel conectar ao servidor. Confirme se as funcoes da Vercel e o Blob Store privado foram configurados.");
+    showNotice("Não foi possível conectar ao servidor. Confirme se as funções da Vercel e o Blob Store privado foram configurados.");
   }
 }
 
@@ -105,7 +105,7 @@ document.querySelector("#setup-form").addEventListener("submit", async (event) =
   const form = new FormData(formElement);
   const password = String(form.get("password") || "");
   if (password !== String(form.get("confirmPassword") || "")) {
-    showNotice("As senhas nao conferem.");
+    showNotice("As senhas não conferem.");
     return;
   }
   const button = formElement.querySelector("button[type=submit]");
@@ -178,12 +178,12 @@ document.querySelector("#reset-form").addEventListener("submit", async (event) =
 document.querySelector("#video-list").addEventListener("click", async (event) => {
   const button = event.target.closest("[data-remove-video]");
   if (!button) return;
-  if (!window.confirm("Remover este video do carrossel?")) return;
+  if (!window.confirm("Remover este vídeo do carrossel?")) return;
   button.disabled = true;
   try {
     const result = await post("video-delete", { id: button.dataset.removeVideo });
     renderDashboard(result.videos, setupConfiguredNow);
-    showNotice("Video removido do carrossel.", "success");
+    showNotice("Vídeo removido do carrossel.", "success");
   } catch (error) {
     showNotice(error.message);
     button.disabled = false;
@@ -205,11 +205,11 @@ document.querySelector("#upload-form").addEventListener("submit", async (event) 
   if (!file) return;
   const title = String(form.get("title") || "").trim();
   if (!title) {
-    showNotice("Informe um titulo para este video.");
+    showNotice("Informe um título para este vídeo.");
     return;
   }
   if (file.size > 300 * 1024 * 1024) {
-    showNotice("O video excede o limite de 300 MB.");
+    showNotice("O vídeo excede o limite de 300 MB.");
     return;
   }
 
@@ -227,7 +227,7 @@ document.querySelector("#upload-form").addEventListener("submit", async (event) 
         body: chunk,
       });
       progress.value = Math.round(((index + 1) / totalChunks) * 100);
-      showNotice(`Enviando video: ${progress.value}%`, "info");
+      showNotice(`Enviando vídeo: ${progress.value}%`, "info");
     }
     const result = await post("video-complete", { uploadId: init.uploadId });
     uploadInput.value = "";
@@ -236,7 +236,7 @@ document.querySelector("#upload-form").addEventListener("submit", async (event) 
     progress.hidden = true;
     clearNotice();
     renderDashboard(result.videos, setupConfiguredNow);
-    showNotice("Video adicionado ao carrossel do site.", "success");
+    showNotice("Vídeo adicionado ao carrossel do site.", "success");
   } catch (error) {
     showNotice(error.message);
   } finally {

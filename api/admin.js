@@ -109,7 +109,7 @@ async function getSession(request) {
 
 async function requireSession(request) {
   const active = await getSession(request);
-  if (!active) throw new ApiError(401, "Sua sessao expirou. Entre novamente.");
+  if (!active) throw new ApiError(401, "Sua sessão expirou. Entre novamente.");
   return active;
 }
 
@@ -164,7 +164,7 @@ async function handleGet(request, action) {
     if (active) result.videos = await readVideos();
     return json(result);
   }
-  throw new ApiError(404, "Acao desconhecida.");
+  throw new ApiError(404, "Ação desconhecida.");
 }
 
 async function handlePost(request, action) {
@@ -172,13 +172,13 @@ async function handlePost(request, action) {
   try {
     body = await request.json();
   } catch {
-    throw new ApiError(400, "Nao consegui ler os dados enviados.");
+    throw new ApiError(400, "Não consegui ler os dados enviados.");
   }
 
   if (action === "setup") {
-    if (await readJson(ACCOUNT_PATH)) throw new ApiError(409, "A conta ja foi configurada.");
+    if (await readJson(ACCOUNT_PATH)) throw new ApiError(409, "A conta já foi configurada.");
     if (!setupKeyMatches(body.setupKey)) {
-      throw new ApiError(403, "Codigo inicial incorreto ou nao configurado na Vercel.");
+      throw new ApiError(403, "Código inicial incorreto ou não configurado na Vercel.");
     }
     if (typeof body.password !== "string" || body.password.length < 12 || body.password.length > 256) {
       throw new ApiError(400, "Use uma senha com pelo menos 12 caracteres.");
@@ -193,7 +193,7 @@ async function handlePost(request, action) {
         createdAt: new Date().toISOString(),
       }, { allowOverwrite: false });
     } catch (error) {
-      if (await readJson(ACCOUNT_PATH)) throw new ApiError(409, "A conta ja foi configurada.");
+      if (await readJson(ACCOUNT_PATH)) throw new ApiError(409, "A conta já foi configurada.");
       throw error;
     }
     return startSession(request);
@@ -202,7 +202,7 @@ async function handlePost(request, action) {
   if (action === "login") {
     const throttleKey = await checkLoginThrottle(request);
     const account = await readJson(ACCOUNT_PATH);
-    if (!account) throw new ApiError(409, "Configure a conta proprietaria primeiro.");
+    if (!account) throw new ApiError(409, "Configure a conta proprietária primeiro.");
     if (typeof body.password !== "string" || body.password.length > 256) {
       await recordLoginFailure(throttleKey);
       throw new ApiError(401, "Senha incorreta.");
@@ -228,9 +228,9 @@ async function handlePost(request, action) {
   if (action === "reset-account") {
     await requireSession(request);
     const account = await readJson(ACCOUNT_PATH);
-    if (!account) throw new ApiError(409, "A conta ja esta no primeiro acesso.");
+    if (!account) throw new ApiError(409, "A conta já está no primeiro acesso.");
     if (!setupKeyMatches(body.setupKey)) {
-      throw new ApiError(403, "O codigo inicial nao esta configurado ou esta incorreto.");
+      throw new ApiError(403, "O código inicial não está configurado ou está incorreto.");
     }
     if (typeof body.password !== "string" || body.password.length > 256) {
       throw new ApiError(401, "Confirme sua senha atual para continuar.");
@@ -238,7 +238,7 @@ async function handlePost(request, action) {
     const actual = await derivePassword(body.password, Buffer.from(account.salt, "base64url"));
     const expected = Buffer.from(account.hash, "base64url");
     if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
-      throw new ApiError(401, "A senha atual esta incorreta.");
+      throw new ApiError(401, "A senha atual está incorreta.");
     }
     await writeJson(SESSION_EPOCH_PATH, { value: (await readEpoch()) + 1 });
     await deleteBlob(ACCOUNT_PATH);
@@ -251,17 +251,17 @@ async function handlePost(request, action) {
     await requireSession(request);
     const videos = await readVideos();
     if (videos.length >= MAX_VIDEOS) {
-      throw new ApiError(409, "O limite de 10 videos foi atingido. Remova um video para adicionar outro.");
+      throw new ApiError(409, "O limite de 10 vídeos foi atingido. Remova um vídeo para adicionar outro.");
     }
     const size = Number(body.size);
     const type = acceptedVideoType(body.type, body.name);
     const title = typeof body.title === "string" ? body.title.trim() : "";
     if (!Number.isSafeInteger(size) || size < 1 || size > MAX_VIDEO_SIZE) {
-      throw new ApiError(400, "O video precisa ter entre 1 byte e 300 MB.");
+      throw new ApiError(400, "O vídeo precisa ter entre 1 byte e 300 MB.");
     }
-    if (!type) throw new ApiError(415, "Envie um video MP4, WebM ou MOV.");
+    if (!type) throw new ApiError(415, "Envie um vídeo MP4, WebM ou MOV.");
     if (!title || title.length > 100) {
-      throw new ApiError(400, "Informe um titulo de ate 100 caracteres para este video.");
+      throw new ApiError(400, "Informe um título de até 100 caracteres para este vídeo.");
     }
 
     const oldUpload = await readJson(UPLOAD_PATH);
@@ -280,16 +280,16 @@ async function handlePost(request, action) {
     await requireSession(request);
     const pending = await readJson(UPLOAD_PATH);
     if (!pending || pending.id !== body.uploadId || pending.expiresAt <= Date.now()) {
-      throw new ApiError(400, "Este envio expirou. Selecione o video novamente.");
+      throw new ApiError(400, "Este envio expirou. Selecione o vídeo novamente.");
     }
     for (let index = 0; index < pending.chunkCount; index += 1) {
       const chunk = await readBlob(chunkPath(pending.id, index));
-      if (!chunk) throw new ApiError(400, "O envio ainda esta incompleto. Tente selecionar o video novamente.");
+      if (!chunk) throw new ApiError(400, "O envio ainda está incompleto. Tente selecionar o vídeo novamente.");
       await chunk.stream?.cancel();
     }
     const videos = await readVideos();
     if (videos.length >= MAX_VIDEOS) {
-      throw new ApiError(409, "O limite de 10 videos foi atingido. Remova um video antes de concluir o envio.");
+      throw new ApiError(409, "O limite de 10 vídeos foi atingido. Remova um vídeo antes de concluir o envio.");
     }
     const video = {
       id: pending.id, title: pending.title, size: pending.size, type: pending.type,
@@ -305,10 +305,10 @@ async function handlePost(request, action) {
   if (action === "video-delete") {
     await requireSession(request);
     const videoId = typeof body.id === "string" ? body.id : "";
-    if (!videoId) throw new ApiError(400, "Selecione o video que deseja remover.");
+    if (!videoId) throw new ApiError(400, "Selecione o vídeo que deseja remover.");
     const videos = await readVideos();
     const video = videos.find((item) => item.id === videoId);
-    if (!video) throw new ApiError(404, "Este video nao esta mais na lista.");
+    if (!video) throw new ApiError(404, "Este vídeo não está mais na lista.");
     const updatedVideos = videos.filter((item) => item.id !== videoId);
     await writeJson(VIDEOS_PATH, updatedVideos);
     await deleteBlob("admin/current-video.json");
@@ -316,7 +316,7 @@ async function handlePost(request, action) {
     return json({ ok: true, videos: updatedVideos });
   }
 
-  throw new ApiError(404, "Acao desconhecida.");
+  throw new ApiError(404, "Ação desconhecida.");
 }
 
 async function handleChunk(request, url) {
@@ -324,16 +324,16 @@ async function handleChunk(request, url) {
   const uploadId = url.searchParams.get("uploadId") || "";
   const index = Number(url.searchParams.get("index"));
   if (!/^[A-Za-z0-9_-]{20,30}$/.test(uploadId) || !Number.isInteger(index)) {
-    throw new ApiError(400, "Bloco de video invalido.");
+    throw new ApiError(400, "Bloco de vídeo inválido.");
   }
   const pending = await readJson(UPLOAD_PATH);
   if (!pending || pending.id !== uploadId || pending.expiresAt <= Date.now()) {
-    throw new ApiError(400, "Este envio expirou. Selecione o video novamente.");
+    throw new ApiError(400, "Este envio expirou. Selecione o vídeo novamente.");
   }
-  if (index < 0 || index >= pending.chunkCount) throw new ApiError(400, "Bloco de video invalido.");
+  if (index < 0 || index >= pending.chunkCount) throw new ApiError(400, "Bloco de vídeo inválido.");
   const chunk = Buffer.from(await request.arrayBuffer());
   const expectedSize = Math.min(CHUNK_SIZE, pending.size - index * CHUNK_SIZE);
-  if (chunk.byteLength !== expectedSize) throw new ApiError(400, "O tamanho de um bloco nao confere.");
+  if (chunk.byteLength !== expectedSize) throw new ApiError(400, "O tamanho de um bloco não confere.");
   await writeBytes(chunkPath(uploadId, index), chunk);
   return json({ ok: true, index });
 }
@@ -346,11 +346,11 @@ export default {
       if (request.method === "GET") return await handleGet(request, action);
       if (request.method === "POST") return await handlePost(request, action);
       if (request.method === "PUT" && action === "video-chunk") return await handleChunk(request, url);
-      return json({ error: "Metodo nao permitido." }, 405, { Allow: "GET, POST, PUT" });
+      return json({ error: "Método não permitido." }, 405, { Allow: "GET, POST, PUT" });
     } catch (error) {
       if (error instanceof ApiError) return json({ error: error.message }, error.status);
       console.error("Vercel Admin API error", error);
-      return json({ error: "O servidor nao conseguiu concluir a solicitacao." }, 500);
+      return json({ error: "O servidor não conseguiu concluir a solicitação." }, 500);
     }
   },
 };
