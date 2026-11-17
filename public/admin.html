@@ -45,22 +45,22 @@
 
     <section id="dashboard-panel" class="panel dashboard" hidden>
       <div class="dashboard-top"><div><p class="eyebrow">PAINEL EXCLUSIVO</p><h1>Oi, Yohana.</h1></div><div class="dashboard-actions"><button id="reset-access-button" class="quiet-button" type="button" hidden>Reabrir primeiro acesso</button><button id="logout-button" class="quiet-button" type="button">Sair da conta</button></div></div>
-      <p class="intro">Adicione at&#xE9; 10 v&#xED;deos ao carrossel. Eles aparecem na mesma posi&#xE7;&#xE3;o do site e a visitante pode navegar pelas setas.</p>
-      <section id="video-library" class="video-library" hidden aria-label="Vídeos do carrossel">
+      <p class="intro">Adicione at&#xE9; 10 v&#xED;deos ao site. Eles aparecem na mesma posi&#xE7;&#xE3;o do site e o(a) visitante pode navegar pelas setas.</p>
+      <section id="video-library" class="video-library" hidden aria-label="Vídeos do site">
         <div class="video-library-heading"><p class="eyebrow">V&#xCD;DEOS DO SITE</p><span id="video-count"></span></div>
         <div id="video-list" class="video-list"></div>
       </section>
-      <p id="video-limit-note" class="video-limit-note" hidden>O carrossel j&#xE1; tem 10 v&#xED;deos. Remova um para adicionar outro.</p>
+      <p id="video-limit-note" class="video-limit-note" hidden>O site j&#xE1; tem 10 v&#xED;deos. Remova um para adicionar outro.</p>
       <form id="upload-form" class="upload-box">
         <label for="video-title">T&#xED;tulo deste v&#xED;deo</label>
-        <input id="video-title" name="title" type="text" maxlength="100" placeholder="Ex.: Um dia de surf com a Yohana" required>
+        <input id="video-title" name="title" type="text" maxlength="100" placeholder="Ex:Minhas unhas para combinar com o verão" required>
         <label for="video-file" class="file-label"><span class="upload-symbol">+</span><strong>Escolha seu v&#xED;deo</strong><small>MP4, WebM ou MOV · m&#xE1;ximo de 300 MB · at&#xE9; 10 v&#xED;deos</small></label>
         <input id="video-file" name="video" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" required>
         <div id="selected-file" class="selected-file" hidden></div>
         <progress id="upload-progress" max="100" value="0" hidden></progress>
         <button class="primary-button" type="submit">Publicar v&#xED;deo <span>&#x2197;</span></button>
       </form>
-      <p class="storage-note">A senha fica protegida no armazenamento privado da Vercel, em formato de hash. O v&#xED;deo enviado passa a ser exibido publicamente no site.</p>
+      <p class="storage-note">A senha fica protegida criptografada em um armazenamento privado em nuvem. O v&#xED;deo enviado passa a ser exibido publicamente no site.</p>
     </section>
 
     <dialog id="reset-dialog" class="reset-dialog">
