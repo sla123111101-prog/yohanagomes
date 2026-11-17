@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f6f3ed">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/admin/admin.css?v=vercel-admin-1">
+  <script src="/admin/admin.js?v=vercel-admin-1" defer></script>
+  <title>Admin | Yohana Gomes</title>
+</head>
+<body>
+  <main class="admin-shell">
+    <a class="admin-brand" href="/" aria-label="Voltar ao site">YG<span>ADMINISTRA&#xC7;&#xC3;O</span></a>
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+    <section id="setup-panel" class="panel" hidden>
+      <p class="eyebrow">PRIMEIRO ACESSO</p>
+      <h1>Bem-vinda,<br><em>Yohana.</em></h1>
+      <p class="intro">Crie a senha da sua conta para proteger esta p&#xE1;gina. Seu nome j&#xE1; est&#xE1; definido como propriet&#xE1;ria.</p>
+      <form id="setup-form" class="admin-form">
+        <label for="setup-key">C&#xF3;digo de verifica&#xE7;&#xE3;o</label>
+        <input id="setup-key" name="setupKey" type="password" autocomplete="off" required>
+        <small class="field-hint">Use o c&#xF3;digo fornecido pelo desenvolvedor. Ele tamb&#xE9;m ser&#xE1; usado se precisar resetar a conta.</small>
+        <label for="setup-password">Crie uma senha</label>
+        <input id="setup-password" name="password" type="password" minlength="12" maxlength="256" autocomplete="new-password" required>
+        <small class="field-hint">Use pelo menos 12 caracteres.</small>
+        <label for="setup-confirm">Repita a senha</label>
+        <input id="setup-confirm" name="confirmPassword" type="password" minlength="12" maxlength="256" autocomplete="new-password" required>
+        <button class="primary-button" type="submit">Criar senha e entrar <span>&#x2197;</span></button>
+      </form>
+    </section>
+
+    <section id="login-panel" class="panel" hidden>
+      <p class="eyebrow">&#xC1;REA DA PROPRIET&#xC1;RIA</p>
+      <h1>Yohana<br><em>Gomes.</em></h1>
+      <p class="intro">Entre para atualizar o v&#xED;deo que aparece no in&#xED;cio do seu site.</p>
+      <form id="login-form" class="admin-form">
+        <label for="login-password">Sua senha</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        <button class="primary-button" type="submit">Entrar <span>&#x2197;</span></button>
+      </form>
+    </section>
+
+    <section id="dashboard-panel" class="panel dashboard" hidden>
+      <div class="dashboard-top"><div><p class="eyebrow">PAINEL EXCLUSIVO</p><h1>Oi, Yohana.</h1></div><div class="dashboard-actions"><button id="reset-access-button" class="quiet-button" type="button" hidden>Reabrir primeiro acesso</button><button id="logout-button" class="quiet-button" type="button">Sair da conta</button></div></div>
+      <p class="intro">Adicione at&#xE9; 10 v&#xED;deos ao carrossel. Eles aparecem na mesma posi&#xE7;&#xE3;o do site e a visitante pode navegar pelas setas.</p>
+      <section id="video-library" class="video-library" hidden aria-label="Vídeos do carrossel">
+        <div class="video-library-heading"><p class="eyebrow">V&#xCD;DEOS DO SITE</p><span id="video-count"></span></div>
+        <div id="video-list" class="video-list"></div>
+      </section>
+      <p id="video-limit-note" class="video-limit-note" hidden>O carrossel j&#xE1; tem 10 v&#xED;deos. Remova um para adicionar outro.</p>
+      <form id="upload-form" class="upload-box">
+        <label for="video-title">T&#xED;tulo deste v&#xED;deo</label>
+        <input id="video-title" name="title" type="text" maxlength="100" placeholder="Ex.: Um dia de surf com a Yohana" required>
+        <label for="video-file" class="file-label"><span class="upload-symbol">+</span><strong>Escolha seu v&#xED;deo</strong><small>MP4, WebM ou MOV · m&#xE1;ximo de 300 MB · at&#xE9; 10 v&#xED;deos</small></label>
+        <input id="video-file" name="video" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" required>
+        <div id="selected-file" class="selected-file" hidden></div>
+        <progress id="upload-progress" max="100" value="0" hidden></progress>
+        <button class="primary-button" type="submit">Publicar v&#xED;deo <span>&#x2197;</span></button>
+      </form>
+      <p class="storage-note">A senha fica protegida no armazenamento privado da Vercel, em formato de hash. O v&#xED;deo enviado passa a ser exibido publicamente no site.</p>
+    </section>
+
+    <dialog id="reset-dialog" class="reset-dialog">
+      <form id="reset-form" class="admin-form">
+        <p class="eyebrow">REABRIR CONFIGURA&#xC7;&#xC3;O</p>
+        <h2>Voltar ao primeiro acesso?</h2>
+        <p class="intro">Isso apaga a senha atual e encerra todas as sessoes. O video publicado continua no site.</p>
+        <div id="reset-notice" class="notice" role="status" aria-live="polite" hidden></div>
+        <label for="reset-password">Confirme sua senha atual</label>
+        <input id="reset-password" name="password" type="password" autocomplete="current-password" required>
+        <label for="reset-key">Codigo de verificacao fornecido pelo desenvolvedor</label>
+        <input id="reset-key" name="setupKey" type="password" autocomplete="off" required>
+        <div class="reset-actions"><button class="quiet-button" id="cancel-reset" type="button">Cancelar</button><button class="primary-button" type="submit">Apagar senha e sair</button></div>
+      </form>
+    </dialog>
+
+    <footer class="admin-footer"><a href="/">Voltar ao site &#x2197;</a><span>Yohana Gomes &#xB7; acesso individual</span></footer>
+  </main>
+</body>
+</html>
+
